@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #FFFDF5;
+  --color-softGreen: #A8C69F;
+  --color-paleYellow: #FDF6E3;
+  --color-softBlue: #D1E8F2;
+  --color-text: #4a4a4a;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-text);
+    font-family: sans-serif;
+  }
+}
