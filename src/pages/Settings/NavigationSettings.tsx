@@ -81,8 +81,8 @@ const NavigationSettings: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-20">
-      <header className="flex items-center space-x-3">
+    <div className="space-y-6 pb-24 max-w-md mx-auto p-4">
+      <header className="flex items-center space-x-3 mb-2">
         <button 
           type="button"
           onClick={() => navigate('/settings')}
@@ -90,7 +90,13 @@ const NavigationSettings: React.FC = () => {
         >
           <ArrowLeft size={20} />
         </button>
-        <h2 className="text-xl font-bold">自定義下方導覽列</h2>
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-emerald-500 rounded-full mr-3 shadow-sm"></span>
+            自定義下方導覽列
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">自由配置喜好的快捷功能按鈕於導覽列</p>
+        </div>
       </header>
 
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">

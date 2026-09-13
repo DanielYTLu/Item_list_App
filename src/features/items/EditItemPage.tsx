@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
 import { useSpaceStore } from '../../store/useSpaceStore';
 import { Button } from '../../components/ui/Button';
-import { MapPin, Package, Hash } from 'lucide-react';
+import { MapPin, Package, Hash, DollarSign, Calendar } from 'lucide-react';
 import { ImagePicker } from '../../components/common/ImagePicker';
 
 const EditItemPage: React.FC = () => {
@@ -38,8 +38,16 @@ const EditItemPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-cream min-h-screen pb-24">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">編輯物品</h2>
+    <div className="p-4 bg-cream min-h-screen pb-24 max-w-md mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-emerald-500 rounded-full mr-3 shadow-sm"></span>
+            編輯物品
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">更新物品照片、名稱、數量與收納位置</p>
+        </div>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* 照片上傳 */}
@@ -98,6 +106,31 @@ const EditItemPage: React.FC = () => {
               className="w-16 p-2 bg-gray-50 rounded-lg text-center"
               value={formData.unit}
               onChange={(e) => setFormData({...formData, unit: e.target.value})}
+            />
+          </div>
+        </div>
+
+        {/* 單價與有效期限（選填） */}
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+          <div>
+            <label className="flex items-center text-sm font-medium text-gray-600 mb-2"><DollarSign size={14} className="mr-1"/> 單價 (選填)</label>
+            <input 
+              type="number" 
+              min="0"
+              step="1"
+              placeholder="例如: 250"
+              className="w-full p-3 rounded-xl border border-gray-200 outline-none focus:border-emerald-500 bg-gray-50/50"
+              value={formData.price ?? ''}
+              onChange={(e) => setFormData({...formData, price: e.target.value ? Number(e.target.value) : undefined})}
+            />
+          </div>
+          <div>
+            <label className="flex items-center text-sm font-medium text-gray-600 mb-2"><Calendar size={14} className="mr-1"/> 有效期限 (選填)</label>
+            <input 
+              type="date" 
+              className="w-full p-3 rounded-xl border border-gray-200 outline-none focus:border-emerald-500 bg-gray-50/50"
+              value={formData.expiryDate ?? ''}
+              onChange={(e) => setFormData({...formData, expiryDate: e.target.value || undefined})}
             />
           </div>
         </div>

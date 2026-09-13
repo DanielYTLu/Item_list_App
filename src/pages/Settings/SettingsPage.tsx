@@ -67,10 +67,15 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <header className="flex items-center space-x-2">
-        <Settings className="text-emerald-600" />
-        <h2 className="text-xl font-bold">設定與資料備份</h2>
+    <div className="space-y-6 pb-24 max-w-md mx-auto p-4">
+      <header className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-emerald-500 rounded-full mr-3 shadow-sm"></span>
+            設定與資料備份
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">管理應用程式設定、主題外觀與資料備份還原</p>
+        </div>
       </header>
 
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-6">

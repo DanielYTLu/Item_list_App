@@ -13,6 +13,7 @@ interface MovingStore {
   updateItemStatus: (taskId: string, itemId: string, status: MovingItemStatus, boxId?: string, targetLocationId?: string) => void;
   batchUpdateStatus: (taskId: string, itemIds: string[], status: MovingItemStatus, boxId?: string) => void;
   completeMovingTask: (taskId: string) => void;
+  reopenMovingTask: (taskId: string) => void;
 }
 
 export const useMovingStore = create<MovingStore>()(
@@ -122,6 +123,11 @@ export const useMovingStore = create<MovingStore>()(
         }
         set((state) => ({
           tasks: state.tasks.map((t) => t.id === taskId ? { ...t, status: 'completed', updatedAt: new Date().toISOString() } : t),
+        }));
+      },
+      reopenMovingTask: (taskId) => {
+        set((state) => ({
+          tasks: state.tasks.map((t) => t.id === taskId ? { ...t, status: 'active', updatedAt: new Date().toISOString() } : t),
         }));
       },
     }),

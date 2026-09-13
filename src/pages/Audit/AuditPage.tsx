@@ -116,35 +116,63 @@ export const AuditPage: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-3 shadow-sm space-y-2">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            <select value={selectedSpaceId} onChange={(e) => { setSelectedSpaceId(e.target.value); setSelectedLocationId('all'); }} className="w-full text-xs p-2 rounded-xl border">
+            <select value={selectedSpaceId} onChange={(e) => { setSelectedSpaceId(e.target.value); setSelectedLocationId('all'); }} className="w-full text-sm p-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-emerald-500 outline-none">
               <option value="all">所有空間</option>{spaces.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
-            <select value={selectedLocationId} onChange={(e) => setSelectedLocationId(e.target.value)} className="w-full text-xs p-2 rounded-xl border">
+            <select value={selectedLocationId} onChange={(e) => setSelectedLocationId(e.target.value)} className="w-full text-sm p-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-emerald-500 outline-none">
               <option value="all">所有位置</option>{availableLocations.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
             </select>
           </div>
-          <input type="text" placeholder="搜尋..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full p-2 text-xs rounded-xl border" />
+          <div className="relative">
+            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input type="text" placeholder="搜尋物品名稱..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-9 pr-3 py-3 text-sm rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-emerald-500 outline-none" />
+          </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {filteredItems.map((item) => {
             const isAudited = !!item.lastAuditedAt && item.status !== 'missing';
             const isMissing = item.status === 'missing';
             return (
-              <div key={item.id} className={`bg-white rounded-2xl p-3 border flex items-center justify-between ${isAudited ? 'border-green-200' : isMissing ? 'border-red-200' : ''}`}>
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-sm">{item.name}</div>
-                  <div className="text-[10px] text-gray-400">{getSpaceName(item.spaceId)} • {getLocationName(item.locationId)}</div>
+              <div key={item.id} className={`bg-white rounded-2xl p-4 border flex items-center justify-between shadow-xs transition-all ${isAudited ? 'border-green-200 bg-green-50/20' : isMissing ? 'border-red-200 bg-red-50/20' : 'border-gray-100'}`}>
+                <div className="min-w-0 flex-1 pr-3">
+                  <div className="font-bold text-base text-gray-800">{item.name}</div>
+                  <div className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
+                    <span>{getSpaceName(item.spaceId)}</span>
+                    <span>•</span>
+                    <span>{getLocationName(item.locationId)}</span>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  {isAudited ? <button onClick={() => handleResetItem(item.id)} className="p-2 bg-green-50 rounded-xl text-softGreen"><CheckCircle2 /></button> : isMissing ? <button onClick={() => handleResetItem(item.id)} className="p-2 bg-red-50 text-red-500 text-[10px] rounded-xl">復原</button> : (
-                    <div className="flex gap-1"><button onClick={() => handleMarkAudited(item.id)} className="p-2 bg-gray-50 rounded-xl"><CheckCircle2 size={16}/></button><button onClick={() => handleMarkMissing(item.id)} className="p-2 bg-gray-50 rounded-xl"><AlertCircle size={16}/></button></div>
+                <div className="flex gap-2 shrink-0">
+                  {isAudited ? (
+                    <button onClick={() => handleResetItem(item.id)} className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs" title="點擊取消已確認狀態">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>已確認</span>
+                    </button>
+                  ) : isMissing ? (
+                    <button onClick={() => handleResetItem(item.id)} className="px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-semibold transition-all shadow-xs">
+                      復原
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button onClick={() => handleMarkAudited(item.id)} className="p-3 bg-gray-100 hover:bg-emerald-600 hover:text-white text-gray-700 rounded-xl transition-all shadow-xs" title="確認在位">
+                        <CheckCircle2 className="w-5 h-5" />
+                      </button>
+                      <button onClick={() => handleMarkMissing(item.id)} className="p-3 bg-gray-100 hover:bg-red-600 hover:text-white text-gray-700 rounded-xl transition-all shadow-xs" title="標記遺失/異常">
+                        <AlertCircle className="w-5 h-5" />
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
             );
           })}
+          {filteredItems.length === 0 && (
+            <div className="text-center py-12 text-gray-400 text-sm bg-white rounded-2xl border border-gray-100">
+              沒有符合條件的物品
+            </div>
+          )}
         </div>
       </div>
     </div>
