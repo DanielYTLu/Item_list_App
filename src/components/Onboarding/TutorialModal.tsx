@@ -70,22 +70,22 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // 在 useEffect 中增加鎖定與解鎖滾動的邏輯
   useEffect(() => {
+    // 鎖定滾動
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+
     const updateSpotlight = () => {
       const currentSelector = steps[step].selector;
       const el = document.querySelector(currentSelector) as HTMLElement;
       
       if (el) {
-        // 使用 behavior: 'smooth' 進行滾動
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        // 監聽滾動事件，直到滾動結束，或給予一個更穩定的等待時間
-        // 使用 500ms 確保滾動動畫確實完成，對於大部分手機設備來說這個體驗較好
-        setTimeout(() => {
+        const rafId = requestAnimationFrame(() => {
           const rect = el.getBoundingClientRect();
           
-          // 如果 rect 的 top 為負值，代表元素在螢幕上方，需要手動微調
-          // 這在某些情況下能幫助解決瀏覽器滾動誤差
           setSpotlightRect({
             top: rect.top,
             left: rect.left,
@@ -93,25 +93,29 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
             height: rect.height
           });
           
-          // 垂直定位邏輯
-          const margin = 20;
           const tooltipHeight = 250;
           const viewportHeight = window.innerHeight;
           
-          if (rect.top + rect.height + tooltipHeight + margin > viewportHeight) {
+          if (rect.top + rect.height + tooltipHeight + 40 > viewportHeight) {
             setTooltipPosition('top');
           } else {
             setTooltipPosition('bottom');
           }
-        }, 500); 
+        });
+        return () => cancelAnimationFrame(rafId);
       } else {
         setSpotlightRect(null);
       }
     };
+
     updateSpotlight();
+
     window.addEventListener('resize', updateSpotlight);
-    // 移除不必要的滾動事件監聽，因為我們現在主動控制滾動
+    // 移除 scroll 監聽，因為我們現在鎖定了 body 的滾動
+    
     return () => {
+      // 解鎖滾動
+      document.body.style.overflow = originalStyle;
       window.removeEventListener('resize', updateSpotlight);
     };
   }, [step]);
