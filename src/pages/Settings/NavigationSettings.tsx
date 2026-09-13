@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -32,9 +32,13 @@ const NavigationSettings: React.FC = () => {
   const { navIds, saveNavItems } = useNavigation();
   const navigate = useNavigate();
 
-  const [activeItems, setActiveItems] = useState<NavItem[]>(() => 
+  const [activeItems, setActiveItems] = React.useState<NavItem[]>(() => 
     navIds.map(id => ALL_ITEMS.find(i => i.id === id)!).filter(Boolean)
   );
+
+  useEffect(() => {
+    setActiveItems(navIds.map(id => ALL_ITEMS.find(i => i.id === id)!).filter(Boolean));
+  }, [navIds]);
 
   const availableItems = ALL_ITEMS.filter(i => !activeItems.some(act => act.id === i.id));
 
@@ -46,13 +50,10 @@ const NavigationSettings: React.FC = () => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setActiveItems((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over.id);
-        const newArray = arrayMove(items, oldIndex, newIndex);
-        saveNavItems(newArray.map(i => i.id));
-        return newArray;
-      });
+      const oldIndex = activeItems.findIndex((i) => i.id === active.id);
+      const newIndex = activeItems.findIndex((i) => i.id === over.id);
+      const newArray = arrayMove(activeItems, oldIndex, newIndex);
+      saveNavItems(newArray.map(i => i.id));
       toast.success('已更新導覽列順序');
     }
   };
@@ -63,7 +64,6 @@ const NavigationSettings: React.FC = () => {
       return;
     }
     const newItems = [...activeItems, itemToAdd];
-    setActiveItems(newItems);
     saveNavItems(newItems.map(i => i.id));
     toast.success(`已將 "${itemToAdd.label}" 加入導覽列`);
   };
@@ -75,7 +75,6 @@ const NavigationSettings: React.FC = () => {
     }
     const itemToRemove = activeItems.find(i => i.id === itemId);
     const newItems = activeItems.filter(i => i.id !== itemId);
-    setActiveItems(newItems);
     saveNavItems(newItems.map(i => i.id));
     toast.success(`已將 "${itemToRemove?.label}" 移出導覽列`);
   };

@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { Home, Package, PlusCircle, Clock, List, User, LucideIcon } from 'lucide-react';
 
 export interface NavItem {
@@ -22,25 +23,33 @@ export const ALL_ITEMS: NavItem[] = [
   { id: 'settings', path: '/settings', icon: User, label: '設定' },
 ];
 
-export const useNavigation = () => {
-  const [navIds, setNavIds] = useState<string[]>(() => {
-    const saved = localStorage.getItem('customNavItems');
-    return saved ? JSON.parse(saved) : ['home', 'items', 'lists', 'expiry'];
-  });
+interface NavigationStore {
+  navIds: string[];
+  saveNavItems: (newIds: string[]) => void;
+  getVisibleItems: () => { left: NavItem[]; center: NavItem; right: NavItem[] };
+}
 
-  const saveNavItems = useCallback((newIds: string[]) => {
-    localStorage.setItem('customNavItems', JSON.stringify(newIds));
-    setNavIds(newIds);
-  }, []);
+export const useNavigation = create<NavigationStore>()(
+  persist(
+    (set, get) => ({
+      navIds: ['home', 'items', 'lists', 'expiry'],
+      saveNavItems: (newIds: string[]) => {
+        set({ navIds: newIds });
+      },
+      getVisibleItems: () => {
+        const { navIds } = get();
+        const items = navIds.map(id => ALL_ITEMS.find(item => item.id === id)).filter(Boolean) as NavItem[];
+        const left = items.slice(0, 2);
+        const right = items.slice(2, 4);
+        const center: NavItem = { id: 'add', path: '/add', icon: PlusCircle, label: '新增', isCenter: true };
+        
+        return { left, center, right };
+      },
+    }),
+    {
+      name: 'customNavItems',
+      partialize: (state) => ({ navIds: state.navIds }),
+    }
+  )
+);
 
-  const getVisibleItems = () => {
-    const items = navIds.map(id => ALL_ITEMS.find(item => item.id === id)).filter(Boolean) as NavItem[];
-    const left = items.slice(0, 2);
-    const right = items.slice(2, 4);
-    const center: NavItem = { id: 'add', path: '/add', icon: PlusCircle, label: '新增', isCenter: true };
-    
-    return { left, center, right };
-  };
-
-  return { navIds, saveNavItems, getVisibleItems };
-};
