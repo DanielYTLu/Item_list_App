@@ -17,3 +17,10 @@
     font-family: sans-serif;
   }
 }
+
+  /* 移除行動端點擊高亮 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
