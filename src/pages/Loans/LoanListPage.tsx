@@ -25,7 +25,7 @@ export const LoanListPage: React.FC = () => {
   return (
     <div className="p-4 pb-24">
       <header className="flex items-center justify-between py-4 mb-2">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full">
+        <button onClick={() => navigate(-1)} className="loan-list-spotlight p-2 -ml-2 hover:bg-gray-100 rounded-full">
           <ArrowLeft size={24} />
         </button>
         <h1 className="font-bold text-lg">借出物品清單</h1>

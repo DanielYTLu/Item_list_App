@@ -16,6 +16,7 @@ export const ShoppingListPage: React.FC = () => {
 
   return (
     <div className="p-4 pb-24">
+      <h2 className="shopping-list-spotlight text-xl font-bold mb-4">購物清單</h2>
       <h2 className="text-xl font-bold mb-4">購物清單</h2>
 
       <form onSubmit={handleAdd} className="flex gap-2 mb-6">

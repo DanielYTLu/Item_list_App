@@ -63,7 +63,7 @@ export default function StatsPage() {
 
   return (
     <div className="max-w-md mx-auto p-4 pb-24 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="stats-spotlight flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BarChart3 className="text-teal-600" size={24} />
           <h1 className="text-xl font-bold text-gray-800">統計與儀表板</h1>

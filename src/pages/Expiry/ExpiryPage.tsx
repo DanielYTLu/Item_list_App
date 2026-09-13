@@ -48,7 +48,7 @@ export default function ExpiryPage() {
 
   return (
     <div className="max-w-md mx-auto p-4 pb-24">
-      <div className="flex items-center justify-between mb-6">
+      <div className="expiry-audit-spotlight flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Clock className="text-emerald-600" size={24} />
           <h1 className="text-xl font-bold">有效期限與提醒</h1>

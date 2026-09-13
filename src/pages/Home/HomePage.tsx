@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { TutorialModal } from '../../components/Onboarding/TutorialModal';
+import { BookOpen, Settings, CheckCheck, Truck, Package, MapPin, ArrowRight, Heart, BarChart3, Layers, ShoppingCart, Clock, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
 import { useSpaceStore } from '../../store/useSpaceStore';
 import { useShoppingListStore } from '../../store/useShoppingListStore';
-import { CheckCheck, Truck } from 'lucide-react';
-import { Settings } from 'lucide-react';
-
-import { Package, MapPin, ShoppingCart, Clock, PlusCircle, ArrowRight, Heart, Layers, BarChart3, UserCheck } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
+  const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
   const { items } = useItemStore();
   const { spaces } = useSpaceStore();
@@ -27,8 +26,9 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-24">
+      {showTutorial && <TutorialModal onClose={() => setShowTutorial(false)} />}
       {/* 歡迎橫幅 */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-md relative">
+      <div className="welcome-banner-spotlight bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-md relative">
         <div className="flex items-center justify-between mb-2">
           <div>
             <h2 className="text-xl font-bold">歡迎回到 宿物</h2>
@@ -38,7 +38,7 @@ export const HomePage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/settings')}
-              className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm transition flex items-center gap-1.5 text-white"
+              className="settings-btn-spotlight bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm transition flex items-center gap-1.5 text-white"
             >
               <Settings size={14} /> 設定
             </button>
@@ -63,11 +63,16 @@ export const HomePage: React.FC = () => {
         </div>
       </div>
 
+
       {/* 功能導航網格 (Quick Access) */}
-      <div>
+      <div className="quick-access-spotlight">
         <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3">功能快捷導航</h3>
         <div className="grid grid-cols-2 gap-3">
-          <button onClick={() => navigate('/spaces')} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
+          <button onClick={() => setShowTutorial(true)} className="bg-emerald-50 p-4 rounded-xl border border-emerald-200 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
+            <div className="w-10 h-10 rounded-lg bg-white text-emerald-600 flex items-center justify-center shadow-sm"><BookOpen size={22} /></div>
+            <div><h4 className="font-bold text-emerald-900 text-sm">新手指南</h4><p className="text-[11px] text-emerald-600">聚光燈導覽所有功能</p></div>
+          </button>
+          <button onClick={() => navigate('/spaces')} className="space-card-spotlight bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
             <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><MapPin size={22} /></div>
             <div><h4 className="font-bold text-gray-800 text-sm">空間與位置</h4><p className="text-[11px] text-gray-400">管理房間與抽屜</p></div>
           </button>
@@ -75,7 +80,7 @@ export const HomePage: React.FC = () => {
             <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><Layers size={22} /></div>
             <div><h4 className="font-bold text-gray-800 text-sm">庫存與消耗品</h4><p className="text-[11px] text-gray-400">數量管控與補貨</p></div>
           </button>
-          <button onClick={() => navigate('/lists')} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
+          <button onClick={() => navigate('/lists')} className="shopping-card-spotlight bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
             <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><ShoppingCart size={22} /></div>
             <div><h4 className="font-bold text-gray-800 text-sm">購物清單</h4><p className="text-[11px] text-gray-400">待買清單 ({uncheckedShoppingCount})</p></div>
           </button>
@@ -91,7 +96,7 @@ export const HomePage: React.FC = () => {
             <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><CheckCheck size={22} /></div>
             <div><h4 className="font-bold text-gray-800 text-sm">清點盤點</h4><p className="text-[11px] text-gray-400">核對空間與在位狀態</p></div>
           </button>
-          <button onClick={() => navigate('/moving')} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
+          <button onClick={() => navigate('/moving')} className="moving-card-spotlight bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center space-x-3 hover:border-emerald-500 transition-all text-left">
             <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><Truck size={22} /></div>
             <div><h4 className="font-bold text-gray-800 text-sm">搬家模式</h4><p className="text-[11px] text-gray-400">打包行李與進度追蹤</p></div>
           </button>
@@ -100,7 +105,7 @@ export const HomePage: React.FC = () => {
       {/* 統計與儀表板快捷卡片 */}
       <div 
         onClick={() => navigate('/stats')}
-        className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition-all group"
+        className="stats-spotlight bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition-all group"
       >
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
@@ -116,17 +121,9 @@ export const HomePage: React.FC = () => {
 
 
 
-      {/* 快速新增動作列 */}
-      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center"><PlusCircle size={24} /></div>
-          <div><h4 className="font-bold text-emerald-900 text-sm">新增隨身物品</h4><p className="text-xs text-emerald-700">記錄位置、分類與期限</p></div>
-        </div>
-        <button onClick={() => navigate('/add')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm">立即新增</button>
-      </div>
       {/* 收藏物品預覽 */}
       {favoriteItems.length > 0 && (
-        <div>
+        <div className="favorite-items-spotlight">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
               <Heart size={16} className="text-rose-500 fill-rose-500" /> 我的收藏

@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { Settings } from 'lucide-react';
+import { OnboardingTooltip } from '../Onboarding/OnboardingTooltip';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    // 檢查用戶是否第一次訪問
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('hasVisited', 'true');
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-cream text-gray-800 antialiased selection:bg-softGreen selection:text-white">
+      {showOnboarding && <OnboardingTooltip onClose={handleCloseOnboarding} />}
       {/* 頂部導覽列 (App Header Bar) */}
       <header className="sticky top-0 z-30 bg-cream/90 backdrop-blur-md border-b border-gray-200/60 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
