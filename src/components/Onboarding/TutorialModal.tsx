@@ -62,37 +62,57 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
   ];
 
   const [tooltipPosition, setTooltipPosition] = useState<'bottom' | 'top'>('bottom');
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const updateSpotlight = () => {
       const currentSelector = steps[step].selector;
-      const el = document.querySelector(currentSelector);
+      const el = document.querySelector(currentSelector) as HTMLElement;
+      
       if (el) {
-        const rect = el.getBoundingClientRect();
-        setSpotlightRect({
-          top: rect.top,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height
-        });
-        if (rect.top + rect.height + 300 > window.innerHeight) {
-          setTooltipPosition('top');
-        } else {
-          setTooltipPosition('bottom');
-        }
+        // 使用 behavior: 'smooth' 進行滾動
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // 監聽滾動事件，直到滾動結束，或給予一個更穩定的等待時間
+        // 使用 500ms 確保滾動動畫確實完成，對於大部分手機設備來說這個體驗較好
+        setTimeout(() => {
+          const rect = el.getBoundingClientRect();
+          
+          // 如果 rect 的 top 為負值，代表元素在螢幕上方，需要手動微調
+          // 這在某些情況下能幫助解決瀏覽器滾動誤差
+          setSpotlightRect({
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height
+          });
+          
+          // 垂直定位邏輯
+          const margin = 20;
+          const tooltipHeight = 250;
+          const viewportHeight = window.innerHeight;
+          
+          if (rect.top + rect.height + tooltipHeight + margin > viewportHeight) {
+            setTooltipPosition('top');
+          } else {
+            setTooltipPosition('bottom');
+          }
+        }, 500); 
       } else {
         setSpotlightRect(null);
       }
     };
     updateSpotlight();
     window.addEventListener('resize', updateSpotlight);
-    window.addEventListener('scroll', updateSpotlight, true);
-    const timer = setTimeout(updateSpotlight, 300);
+    // 移除不必要的滾動事件監聽，因為我們現在主動控制滾動
     return () => {
       window.removeEventListener('resize', updateSpotlight);
-      window.removeEventListener('scroll', updateSpotlight, true);
-      clearTimeout(timer);
     };
   }, [step]);
 
@@ -122,13 +142,15 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
       )}
 
       <div 
-        className="absolute w-full max-w-sm px-4 transition-all duration-300 z-[10000]"
+        className="absolute w-[calc(100vw-32px)] max-w-sm px-4 transition-all duration-300 z-[10000]"
         style={{
           top: spotlightRect 
             ? (tooltipPosition === 'bottom' ? (spotlightRect.top + spotlightRect.height + 20) : (spotlightRect.top - 20)) 
             : '50%',
           left: '50%',
-          transform: tooltipPosition === 'top' ? 'translate(-50%, -100%)' : 'translateX(-50%)'
+          transform: tooltipPosition === 'top' ? 'translate(-50%, -100%)' : 'translateX(-50%)',
+          maxWidth: '90%',
+          width: '100%'
         }}
       >
         <div className="bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 animate-in fade-in zoom-in duration-300">

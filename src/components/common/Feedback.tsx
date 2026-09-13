@@ -9,13 +9,13 @@ interface ToastProps {
 
 export const Toast: React.FC<ToastProps> = ({ message, type = 'success', onClose }) => {
   return (
-    <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 animate-bounce">
-      <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl shadow-lg text-white font-medium text-sm ${
+    <div className="fixed bottom-24 left-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-10 duration-300">
+      <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl shadow-xl text-white font-medium text-sm ${
         type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-gray-800'
       }`}>
         {type === 'success' && <CheckCircle2 size={18} />}
         {type === 'error' && <AlertCircle size={18} />}
-        <span>{message}</span>
+        <span className="flex-1">{message}</span>
       </div>
     </div>
   );

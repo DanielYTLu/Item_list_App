@@ -2,11 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { useItemStore } from '../../store/useItemStore';
 import { useSpaceStore } from '../../store/useSpaceStore';
 import { Button } from '../../components/ui/Button';
+import { EmptyState } from '../../components/common/EmptyState';
 import { Package, Trash2, MapPin, Box, Heart, Search, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const ItemsPage: React.FC = () => {
-  const { items, deleteItem, updateItem } = useItemStore();
+  const items = useItemStore((state) => state.items);
+  const deleteItem = useItemStore((state) => state.deleteItem);
+  const updateItem = useItemStore((state) => state.updateItem);
   const { spaces, locations } = useSpaceStore();
   const navigate = useNavigate();
   
@@ -78,13 +81,12 @@ const ItemsPage: React.FC = () => {
       
       <div className="grid gap-3">
         {filteredItems.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-            <Package className="mx-auto text-gray-300 mb-2" size={40} />
-            <p className="text-gray-500">目前沒有符合的物品</p>
-            {items.length === 0 && (
-              <Button className="mt-4 bg-emerald-600" onClick={() => navigate('/add')}>馬上新增</Button>
-            )}
-          </div>
+          <EmptyState 
+            title="沒有找到物品" 
+            description={items.length === 0 ? "目前還沒有任何物品，快來新增吧！" : "試著調整搜尋條件或類別。"}
+            actionLabel={items.length === 0 ? "馬上新增" : undefined}
+            onAction={items.length === 0 ? () => navigate('/add') : undefined}
+          />
         ) : (
           filteredItems.map(item => (
             <div key={item.id} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
