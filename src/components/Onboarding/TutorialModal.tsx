@@ -81,9 +81,11 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
       const el = document.querySelector(currentSelector) as HTMLElement;
       
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 使用 behavior: 'auto' 瞬間定位，避免 smooth 帶來的動畫延遲導致測量錯誤
+        el.scrollIntoView({ behavior: 'auto', block: 'center' });
 
-        const rafId = requestAnimationFrame(() => {
+        // 給予一點點時間讓瀏覽器完成重繪後再計算
+        const timer = setTimeout(() => {
           const rect = el.getBoundingClientRect();
           
           setSpotlightRect({
@@ -101,8 +103,9 @@ export const TutorialModal: React.FC<Props> = ({ onClose }) => {
           } else {
             setTooltipPosition('bottom');
           }
-        });
-        return () => cancelAnimationFrame(rafId);
+        }, 150); // 等待 150ms 確保佈局穩定
+        
+        return () => clearTimeout(timer);
       } else {
         setSpotlightRect(null);
       }

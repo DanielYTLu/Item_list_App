@@ -3,8 +3,40 @@ import { useNavigate } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
 import { useSpaceStore } from '../../store/useSpaceStore';
 import { Button } from '../../components/ui/Button';
-import { ChevronDown, MapPin, Package, Tag, Hash } from 'lucide-react';
+import { ChevronDown, ChevronUp, MapPin, Package, Hash, Camera, Calendar } from 'lucide-react';
 import { ImagePicker } from '../../components/common/ImagePicker';
+
+const QuantitySelector = ({ value, onChange, unit, setUnit }: { value: number, onChange: (val: number) => void, unit: string, setUnit: (val: string) => void }) => {
+  return (
+    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+      <label className="flex items-center text-sm font-medium text-gray-500"><Hash size={16} className="mr-2" /> 數量</label>
+      <div className="flex items-center gap-3">
+        <button 
+          type="button"
+          onClick={() => onChange(Math.max(1, value - 1))}
+          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-lg font-bold hover:bg-gray-200"
+        >-</button>
+        <span className="w-8 text-center font-bold text-lg">{value}</span>
+        <button 
+          type="button"
+          onClick={() => onChange(value + 1)}
+          className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg font-bold hover:bg-emerald-200"
+        >+</button>
+        <select 
+          className="ml-2 p-2 bg-gray-50 rounded-xl text-sm border-none outline-none"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+        >
+          <option value="個">個</option>
+          <option value="包">包</option>
+          <option value="盒">盒</option>
+          <option value="瓶">瓶</option>
+          <option value="組">組</option>
+        </select>
+      </div>
+    </div>
+  );
+};
 
 const AddItemPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,14 +54,12 @@ const AddItemPage: React.FC = () => {
     note: ''
   });
 
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const filteredLocations = locations.filter(l => l.spaceId === formData.spaceId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.spaceId || !formData.locationId) return;
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
 
     addItem({
       ...formData,
@@ -41,25 +71,16 @@ const AddItemPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-cream min-h-screen pb-24">
+    <div className="p-4 bg-gray-50 min-h-screen pb-24">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">新增物品</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 照片上傳 */}
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-          <ImagePicker 
-            value={formData.image} 
-            onChange={(base64) => setFormData({...formData, image: base64})} 
-          />
-        </div>
-
         {/* 名稱 */}
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-          <label className="block text-sm font-medium text-gray-600 mb-2">物品名稱</label>
           <input 
             required
-            className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-400 outline-none"
-            placeholder="例如：延長線"
+            className="w-full text-lg p-2 outline-none"
+            placeholder="請輸入物品名稱"
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
           />
@@ -68,7 +89,7 @@ const AddItemPage: React.FC = () => {
         {/* 空間與位置 */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-            <label className="flex items-center text-sm font-medium text-gray-600 mb-2"><Package size={14} className="mr-1"/> 空間</label>
+            <label className="flex items-center text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider"><Package size={14} className="mr-1"/> 空間</label>
             <select 
               className="w-full bg-gray-50 p-2 rounded-lg text-sm border-none outline-none"
               value={formData.spaceId}
@@ -78,7 +99,7 @@ const AddItemPage: React.FC = () => {
             </select>
           </div>
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-            <label className="flex items-center text-sm font-medium text-gray-600 mb-2"><MapPin size={14} className="mr-1"/> 位置</label>
+            <label className="flex items-center text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider"><MapPin size={14} className="mr-1"/> 位置</label>
             <select 
               required
               className="w-full bg-gray-50 p-2 rounded-lg text-sm border-none outline-none"
@@ -92,29 +113,45 @@ const AddItemPage: React.FC = () => {
         </div>
 
         {/* 數量 */}
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-          <label className="flex items-center text-sm font-medium text-gray-600"><Hash size={14} className="mr-1"/> 數量</label>
-          <div className="flex items-center gap-2">
-            <input 
-              type="number" min="1"
-              className="w-20 p-2 bg-gray-50 rounded-lg text-center"
-              value={formData.quantity}
-              onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value) || 1})}
-            />
-            <input 
-              className="w-16 p-2 bg-gray-50 rounded-lg text-center"
-              placeholder="單位"
-              value={formData.unit}
-              onChange={(e) => setFormData({...formData, unit: e.target.value})}
-            />
-          </div>
+        <QuantitySelector 
+          value={formData.quantity} 
+          onChange={(val) => setFormData({...formData, quantity: val})}
+          unit={formData.unit}
+          setUnit={(val) => setFormData({...formData, unit: val})}
+        />
+
+        {/* 進階收折區塊 */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <button 
+            type="button"
+            className="w-full p-4 flex items-center justify-between text-sm font-medium text-gray-600 hover:bg-gray-50"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+          >
+            <span>更多選項 (照片/期限/備註)</span>
+            {showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          
+          {showAdvanced && (
+            <div className="p-4 border-t border-gray-50 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2 flex items-center"><Camera size={14} className="mr-1"/> 照片</label>
+                <ImagePicker 
+                  value={formData.image} 
+                  onChange={(base64) => setFormData({...formData, image: base64})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2 flex items-center"><Calendar size={14} className="mr-1"/> 有效期限</label>
+                <input type="date" className="w-full p-3 rounded-xl border border-gray-200" />
+              </div>
+            </div>
+          )}
         </div>
 
-        <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 py-4 text-lg">確認新增</Button>
+        <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 py-4 text-lg rounded-2xl shadow-lg shadow-emerald-200">確認新增</Button>
       </form>
     </div>
   );
 };
 
 export default AddItemPage;
-

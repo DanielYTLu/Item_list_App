@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import SpaceManagement from './pages/SpaceManagement';
-import AddItemPage from './pages/Items/AddItemPage';
+import AddItemPage from './features/items/AddItemPage';
 import ItemsPage from './features/items/ItemsPage';
 import { ItemDetailPage } from './pages/Items/ItemDetailPage';
 import { InventoryDashboard } from './pages/Inventory/InventoryDashboard';
