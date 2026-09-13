@@ -1,15 +1,30 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
+import { useSpaceStore } from '../../store/useSpaceStore';
+import { useMovingStore } from '../../store/useMovingStore';
+import { useShoppingListStore } from '../../store/useShoppingListStore';
 import { Settings, Download, Upload, Trash2, Info, LayoutGrid } from 'lucide-react';
 
 const SettingsPage: React.FC = () => {
-  const { items, importData, exportData } = useItemStore();
+  const itemStore = useItemStore();
+  const spaceStore = useSpaceStore();
+  const movingStore = useMovingStore();
+  const shoppingListStore = useShoppingListStore();
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const handleExport = () => {
-    const data = exportData();
+    const data = {
+      items: itemStore.items,
+      spaces: spaceStore.spaces,
+      locations: spaceStore.locations,
+      movingTasks: movingStore.tasks,
+      shoppingList: shoppingListStore.shoppingList,
+      exportedAt: new Date().toISOString(),
+    };
+    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -29,9 +44,20 @@ const SettingsPage: React.FC = () => {
     reader.onload = (e) => {
       try {
         const importedData = JSON.parse(e.target?.result as string);
-        if (confirm('匯入資料將會覆蓋當前所有資料，確定繼續嗎？')) {
-          importData(importedData);
+        if (confirm('匯入資料將會完全覆蓋目前的物品、空間、搬家清單與購物清單，確定繼續嗎？')) {
+          // Clear and set new data
+          itemStore.importData(importedData.items || []);
+          // Note: Since existing stores use persist middleware, direct state set via setter might be needed 
+          // if they don't have explicit importData methods. 
+          // For simplicity in this structure, we assume we need to update state directly or via dedicated methods.
+          
+          // Using standard way to update store state (assuming standard Zustand state setters)
+          useSpaceStore.setState({ spaces: importedData.spaces || [], locations: importedData.locations || [] });
+          useMovingStore.setState({ tasks: importedData.movingTasks || [] });
+          useShoppingListStore.setState({ shoppingList: importedData.shoppingList || [] });
+          
           alert('資料匯入成功！');
+          window.location.reload();
         }
       } catch (err) {
         alert('檔案格式錯誤，無法匯入。');

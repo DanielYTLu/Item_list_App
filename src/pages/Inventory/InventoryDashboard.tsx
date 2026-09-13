@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useItemStore } from '../../store/useItemStore';
+import { useShoppingListStore } from '../../store/useShoppingListStore';
 import { AlertCircle, Plus, Minus, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
@@ -7,19 +8,32 @@ import { Button } from '../../components/ui/Button';
 export const InventoryDashboard: React.FC = () => {
   const items = useItemStore((state) => state.items);
   const updateItem = useItemStore((state) => state.updateItem);
+  const { shoppingList } = useShoppingListStore();
   const navigate = useNavigate();
+  const [filterMode] = useState<'all' | 'low'>('all');
 
-  // 篩選出需要補充的消耗品 (假設數量小於或等於 minQuantity)
   const lowStockItems = items.filter(
-    (item) => 
-      item.minQuantity !== undefined && 
+    (item) =>
+      item.minQuantity !== undefined &&
       item.quantity <= item.minQuantity
   );
 
   return (
-    <div className="p-4 pb-24">
-      <h2 className="text-xl font-bold mb-4">庫存管理</h2>
-      
+    <div className="p-4 pb-28 max-w-2xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-blue-500 rounded-full mr-3 shadow-sm"></span>
+            庫存與消耗品管理
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">即時掌握生活物資存量，低庫存一鍵補貨</p>
+        </div>
+        <div className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-blue-100">
+          <Package className="w-3.5 h-3.5 mr-1.5" />
+          總品項 {items.length}
+        </div>
+      </div>
+
       {items.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-gray-200">
           <Package className="mx-auto text-gray-300 mb-2" size={40} />
@@ -51,13 +65,13 @@ export const InventoryDashboard: React.FC = () => {
                   <p className="text-sm text-gray-500">庫存: {item.quantity} {item.unit || ''}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button 
+                  <button
                     onClick={() => updateItem(item.id, { quantity: Math.max(0, item.quantity - 1) })}
                     className="p-2 hover:bg-gray-100 rounded-full"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => updateItem(item.id, { quantity: item.quantity + 1 })}
                     className="p-2 hover:bg-gray-100 rounded-full"
                   >
@@ -72,4 +86,3 @@ export const InventoryDashboard: React.FC = () => {
     </div>
   );
 };
-

@@ -63,14 +63,18 @@ export default function StatsPage() {
 
   return (
     <div className="max-w-md mx-auto p-4 pb-24 space-y-6">
-      <div className="stats-spotlight flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="text-teal-600" size={24} />
-          <h1 className="text-xl font-bold text-gray-800">統計與儀表板</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-teal-500 rounded-full mr-3 shadow-sm"></span>
+            統計與儀表板
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">檢視物品總數、分類佔比與空間分佈統計數據</p>
         </div>
-        <span className="text-xs bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full font-medium border border-teal-200">
+        <div className="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-teal-100">
+          <BarChart3 className="w-3.5 h-3.5 mr-1.5" />
           總覽分析
-        </span>
+        </div>
       </div>
 
       <div className="flex bg-gray-100 p-1 rounded-xl">

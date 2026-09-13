@@ -57,21 +57,64 @@ export const AuditPage: React.FC = () => {
   const getLocationName = (id: string) => locations.find((l) => l.id === id)?.name || '未知';
 
   return (
-    <div className="min-h-screen bg-warmGray-50 pb-20">
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-warmGray-200 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-xl text-warmGray-600 hover:bg-warmGray-100"><ArrowLeft className="w-5 h-5" /></button>
-          <h1 className="text-lg font-bold">清點盤點模式</h1>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div>
+            <h2 className="text-xl font-black text-gray-850 tracking-tight flex items-center">
+              <span className="w-2.5 h-6 bg-emerald-500 rounded-full mr-2.5 shadow-sm"></span>
+              清點盤點模式
+            </h2>
+            <p className="text-xs text-gray-500">逐一盤點清點空間內的所有物品狀態</p>
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <button onClick={handleResetAllAudit} className="p-2 rounded-xl text-warmGray-500"><RotateCcw className="w-4 h-4" /></button>
-          <button onClick={handleBatchAuditAll} className="text-xs bg-softGreen text-white px-3 py-1.5 rounded-xl">全部確認</button>
+        <div className="flex items-center gap-1.5">
+          <button onClick={handleResetAllAudit} className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition-all" title="重置盤點"><RotateCcw className="w-4 h-4" /></button>
+          <button onClick={handleBatchAuditAll} className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl font-bold shadow-sm transition-all">全部確認</button>
         </div>
       </div>
       <div className="max-w-md mx-auto px-4 py-4 space-y-4">
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <div className="flex justify-between text-xs mb-2 text-warmGray-500"><span>進度</span><span>{stats.percent}%</span></div>
-          <div className="w-full bg-warmGray-100 rounded-full h-2"><div className="bg-softGreen h-2 rounded-full" style={{ width: `${stats.percent}%` }} /></div>
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-emerald-100/60 space-y-3">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-gray-700">盤點進度</span>
+              <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">
+                {stats.audited} / {stats.total} 件
+              </span>
+            </div>
+            <span className="text-sm font-black text-emerald-600">{stats.percent}%</span>
+          </div>
+
+          <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden p-0.5 shadow-inner">
+            <div 
+              className="bg-gradient-to-r from-emerald-400 to-teal-500 h-full rounded-full transition-all duration-700 ease-out shadow-sm" 
+              style={{ width: `${stats.percent}%` }} 
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 pt-1">
+            <button 
+              onClick={() => setStatusFilter(statusFilter === 'audited' ? 'all' : 'audited')}
+              className={`p-2 rounded-xl text-center border text-[11px] transition-all ${statusFilter === 'audited' ? 'bg-emerald-50 border-emerald-300 font-bold text-emerald-800 shadow-sm' : 'bg-gray-50/50 border-gray-100 text-gray-600 hover:bg-gray-100/60'}`}
+            >
+              <div className="text-emerald-600 font-bold text-xs">{stats.audited}</div>
+              <div className="text-[10px] text-gray-400">已清點</div>
+            </button>
+            <button 
+              onClick={() => setStatusFilter(statusFilter === 'pending' ? 'all' : 'pending')}
+              className={`p-2 rounded-xl text-center border text-[11px] transition-all ${statusFilter === 'pending' ? 'bg-amber-50 border-amber-300 font-bold text-amber-800 shadow-sm' : 'bg-gray-50/50 border-gray-100 text-gray-600 hover:bg-gray-100/60'}`}
+            >
+              <div className="text-amber-600 font-bold text-xs">{stats.pending}</div>
+              <div className="text-[10px] text-gray-400">待清點</div>
+            </button>
+            <button 
+              onClick={() => setStatusFilter(statusFilter === 'missing' ? 'all' : 'missing')}
+              className={`p-2 rounded-xl text-center border text-[11px] transition-all ${statusFilter === 'missing' ? 'bg-red-50 border-red-300 font-bold text-red-800 shadow-sm' : 'bg-gray-50/50 border-gray-100 text-gray-600 hover:bg-gray-100/60'}`}
+            >
+              <div className="text-red-500 font-bold text-xs">{stats.missing}</div>
+              <div className="text-[10px] text-gray-400">遺失/異常</div>
+            </button>
+          </div>
         </div>
         <div className="bg-white rounded-2xl p-3 shadow-sm space-y-2">
           <div className="grid grid-cols-2 gap-2">

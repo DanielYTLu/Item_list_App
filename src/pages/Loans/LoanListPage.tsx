@@ -24,12 +24,20 @@ export const LoanListPage: React.FC = () => {
 
   return (
     <div className="p-4 pb-24">
-      <header className="flex items-center justify-between py-4 mb-2">
-        <button onClick={() => navigate(-1)} className="loan-list-spotlight p-2 -ml-2 hover:bg-gray-100 rounded-full">
-          <ArrowLeft size={24} />
-        </button>
-        <h1 className="font-bold text-lg">借出物品清單</h1>
-        <div className="w-10"></div>
+      <header className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div>
+            <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+              <span className="w-2.5 h-7 bg-amber-500 rounded-full mr-3 shadow-sm"></span>
+              借出物品清單
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">記錄借給親友的物品與歸還狀態追蹤</p>
+          </div>
+        </div>
+        <div className="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-amber-100">
+          <UserCheck className="w-3.5 h-3.5 mr-1.5" />
+          借出中 {lentCount}
+        </div>
       </header>
 
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4 flex items-center justify-between">

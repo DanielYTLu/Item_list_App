@@ -32,8 +32,20 @@ export default function SpaceManagement() {
   };
 
   return (
-    <div className="p-4 space-y-6">
-      <h1 className="text-2xl font-bold">空間與位置管理</h1>
+    <div className="p-4 max-w-md mx-auto space-y-6 pb-24">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-emerald-500 rounded-full mr-3 shadow-sm"></span>
+            空間與位置管理
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">管理您的居家空間、房間與收納位置分佈</p>
+        </div>
+        <div className="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-emerald-100">
+          <MapPin className="w-3.5 h-3.5 mr-1.5" />
+          空間總數 {spaces.length}
+        </div>
+      </div>
       
       {/* 新增空間 */}
       <div className="flex gap-2">

@@ -16,13 +16,18 @@ export const MovingListPage: React.FC = () => {
   const getSpaceName = (id?: string) => (!id || id === 'all' ? '所有空間' : spaces.find((s) => s.id === id)?.name || '未知');
 
   return (
-    <div className="space-y-4 pb-20">
-      <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl p-4 text-white flex justify-between items-center">
+    <div className="space-y-4 pb-24 max-w-md mx-auto p-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold flex items-center gap-1.5"><Truck size={18} />搬家模式</h2>
-          <p className="text-[10px] text-amber-100">打包行李與進度追蹤</p>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-orange-500 rounded-full mr-3 shadow-sm"></span>
+            搬家模式
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">規劃打包行李箱、記錄箱子與搬遷進度追蹤</p>
         </div>
-        <button onClick={() => setIsOpen(true)} className="bg-white text-orange-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1"><Plus size={14} />建立</button>
+        <button onClick={() => setIsOpen(true)} className="bg-orange-600 hover:bg-orange-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+          <Plus size={16} />建立計畫
+        </button>
       </div>
       <div className="space-y-2">
         {tasks.length === 0 ? (

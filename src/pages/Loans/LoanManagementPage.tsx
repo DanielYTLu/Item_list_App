@@ -28,13 +28,21 @@ export const LoanManagementPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 pb-20">
-      <header className="flex items-center justify-between py-4 mb-2">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-gray-100 rounded-full">
-          <ArrowLeft size={24} />
-        </button>
-        <h1 className="font-bold text-lg">借出管理：{item.name}</h1>
-        <div className="w-10"></div>
+    <div className="p-4 pb-20 max-w-md mx-auto">
+      <header className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div>
+            <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+              <span className="w-2.5 h-7 bg-amber-500 rounded-full mr-3 shadow-sm"></span>
+              借出管理：{item.name}
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">記錄借出對象、借出日期與歸還管理</p>
+          </div>
+        </div>
+        <div className="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-amber-100">
+          <User className="w-3.5 h-3.5 mr-1.5" />
+          {item.status === 'lent' ? '已借出' : '可借出'}
+        </div>
       </header>
 
       {item.status === 'lent' ? (

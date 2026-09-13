@@ -48,10 +48,17 @@ export default function ExpiryPage() {
 
   return (
     <div className="max-w-md mx-auto p-4 pb-24">
-      <div className="expiry-audit-spotlight flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Clock className="text-emerald-600" size={24} />
-          <h1 className="text-xl font-bold">有效期限與提醒</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-gray-850 tracking-tight flex items-center">
+            <span className="w-2.5 h-7 bg-red-500 rounded-full mr-3 shadow-sm"></span>
+            有效期限與提醒
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">即時追蹤食品與物品有效期限，避免過期浪費</p>
+        </div>
+        <div className="bg-red-50 text-red-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center shadow-xs border border-red-100">
+          <Clock className="w-3.5 h-3.5 mr-1.5" />
+          期限追蹤
         </div>
       </div>
 
