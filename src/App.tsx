@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import SpaceManagement from './pages/SpaceManagement';
 import AddItemPage from './features/items/AddItemPage';
+import EditItemPage from './features/items/EditItemPage';
 import ItemsPage from './features/items/ItemsPage';
 import { ItemDetailPage } from './pages/Items/ItemDetailPage';
 import { InventoryDashboard } from './pages/Inventory/InventoryDashboard';
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route index element={<HomePage />} />
           <Route path="items" element={<ItemsPage />} />
           <Route path="items/:id" element={<ItemDetailPage />} />
+          <Route path="edit/:id" element={<EditItemPage />} />
           <Route path="add" element={<AddItemPage />} />
           <Route path="lists" element={<ShoppingListPage />} />
           <Route path="inventory" element={<InventoryDashboard />} />

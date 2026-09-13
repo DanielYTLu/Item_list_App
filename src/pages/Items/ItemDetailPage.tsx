@@ -1,8 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
-import { Button } from '../../components/ui/Button';
-import { ArrowLeft, Trash2, Edit3, Tag, MapPin, Package, User } from 'lucide-react';
+import { ArrowLeft, Trash2, Edit3, Tag, MapPin, Package, User, ArrowRight } from 'lucide-react';
 
 export const ItemDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,13 +66,52 @@ export const ItemDetailPage: React.FC = () => {
           )}
         </div>
 
-        <div className="space-y-2">
-          <Button className="w-full" onClick={() => navigate(`/edit/${item.id}`)}>
-            <Edit3 size={18} className="mr-2 inline" /> 編輯資料
-          </Button>
-          <Button className="w-full bg-amber-600 hover:bg-amber-700" onClick={() => navigate(`/loans/${item.id}`)}>
-            <User size={18} className="mr-2 inline" /> 借出管理
-          </Button>
+        <div className="space-y-3">
+          <button
+            onClick={() => navigate(`/loans/${item.id}`)}
+            className={`w-full group relative overflow-hidden rounded-2xl p-4 text-white shadow-md transition-all duration-300 hover:shadow-lg active:scale-[0.98] flex items-center justify-between ${
+              item.status === 'lent' 
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-amber-500/20' 
+                : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-orange-500/20'
+            }`}
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-white/25 backdrop-blur-xs flex items-center justify-center text-white transition-transform group-hover:scale-110">
+                <User size={20} />
+              </div>
+              <div className="text-left">
+                <div className="text-xs text-white/80 font-medium">
+                  {item.status === 'lent' ? '目前物品已借出' : '物品出借紀錄'}
+                </div>
+                <div className="text-lg font-bold tracking-wide">
+                  {item.status === 'lent' ? '管理歸還與借用人' : '借出管理與登記'}
+                </div>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover:translate-x-1">
+              <ArrowRight size={18} />
+            </div>
+          </button>
+
+          <button
+            onClick={() => navigate(`/edit/${item.id}`)}
+            className="w-full group relative overflow-hidden rounded-2xl p-4 bg-white border border-gray-200 text-gray-700 shadow-xs hover:border-emerald-400 hover:bg-emerald-50/30 transition-all duration-300 hover:shadow-md active:scale-[0.98] flex items-center justify-between"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-transform group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white">
+                <Edit3 size={20} />
+              </div>
+              <div className="text-left">
+                <div className="text-xs text-gray-400 font-medium">修改物品屬性</div>
+                <div className="text-lg font-bold text-gray-800 group-hover:text-emerald-900 tracking-wide">
+                  編輯物品資料
+                </div>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-gray-50 text-gray-400 flex items-center justify-center transition-transform group-hover:translate-x-1 group-hover:text-emerald-600 group-hover:bg-emerald-100/60">
+              <ArrowRight size={18} />
+            </div>
+          </button>
         </div>
       </div>
     </div>
