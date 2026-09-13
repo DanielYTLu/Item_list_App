@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TutorialModal } from '../../components/Onboarding/TutorialModal';
-import { BookOpen, Settings, CheckCheck, Truck, Package, MapPin, ArrowRight, Heart, BarChart3, Layers, ShoppingCart, Clock, UserCheck } from 'lucide-react';
+import { BookOpen, Settings, CheckCheck, Truck, Package, MapPin, ArrowRight, Heart, BarChart3, Layers, ShoppingCart, Clock, UserCheck, Sparkles, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useItemStore } from '../../store/useItemStore';
 import { useSpaceStore } from '../../store/useSpaceStore';
@@ -27,38 +27,62 @@ export const HomePage: React.FC = () => {
   return (
     <div className="space-y-6 pb-24">
       {showTutorial && <TutorialModal onClose={() => setShowTutorial(false)} />}
-      {/* 歡迎橫幅 */}
-      <div className="welcome-banner-spotlight bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-md relative">
-        <div className="flex items-center justify-between mb-2">
+      
+      {/* 歡迎橫幅 (Welcome Banner) 升級質感 */}
+      <div className="welcome-banner-spotlight bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden ring-1 ring-white/20">
+        <div className="absolute -right-10 -top-10 w-44 h-44 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-10 -bottom-10 w-36 h-36 bg-teal-300/20 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="flex items-center justify-between mb-5 relative z-10">
           <div>
-            <h2 className="text-xl font-bold">歡迎回到 宿物</h2>
-            <p className="text-emerald-100 text-xs mt-1">你的東西，我幫你記得。</p>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-emerald-100 text-[11px] font-semibold mb-2 border border-white/20 shadow-2xs">
+              <Sparkles size={12} className="text-emerald-200 animate-pulse" /> 智能居家收納
+            </div>
+            <h2 className="text-2xl font-black tracking-tight drop-shadow-sm">歡迎回到宿物</h2>
+            <p className="text-emerald-100/90 text-xs mt-0.5 font-normal">你的東西，我幫你記得。</p>
           </div>
           <div className="flex items-center space-x-2">
             <button
               type="button"
               onClick={() => navigate('/settings')}
-              className="settings-btn-spotlight bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm transition flex items-center gap-1.5 text-white"
+              className="settings-btn-spotlight bg-white/15 hover:bg-white/25 active:scale-95 px-3 py-2 rounded-xl text-xs font-medium backdrop-blur-md transition-all duration-200 flex items-center gap-1.5 text-white border border-white/20 shadow-2xs"
             >
               <Settings size={14} /> 設定
             </button>
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <div className="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/25 shadow-sm">
               <Package size={22} className="text-white" />
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/20 text-center">
-          <div>
-            <div className="text-lg font-bold">{items.length}</div>
-            <div className="text-[11px] text-emerald-100">總物品數</div>
+
+        <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-white/15 relative z-10">
+          <div 
+            onClick={() => navigate('/items')}
+            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] transition-all duration-200 p-3 rounded-2xl backdrop-blur-md border border-white/15 text-center cursor-pointer group shadow-2xs"
+          >
+            <div className="text-xl font-black tracking-tight group-hover:scale-105 transition-transform">{items.length}</div>
+            <div className="text-[11px] text-emerald-100 font-medium mt-0.5">總物品數</div>
           </div>
-          <div>
-            <div className="text-lg font-bold">{spaces.length}</div>
-            <div className="text-[11px] text-emerald-100">管理空間</div>
+          <div 
+            onClick={() => navigate('/spaces')}
+            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] transition-all duration-200 p-3 rounded-2xl backdrop-blur-md border border-white/15 text-center cursor-pointer group shadow-2xs"
+          >
+            <div className="text-xl font-black tracking-tight group-hover:scale-105 transition-transform">{spaces.length}</div>
+            <div className="text-[11px] text-emerald-100 font-medium mt-0.5">管理空間</div>
           </div>
-          <div>
-            <div className="text-lg font-bold">{expiredCount}</div>
-            <div className="text-[11px] text-emerald-100">過期提醒</div>
+          <div 
+            onClick={() => navigate('/expiry')}
+            className={`transition-all duration-200 p-3 rounded-2xl backdrop-blur-md text-center cursor-pointer group border shadow-2xs active:scale-[0.98] ${
+              expiredCount > 0 
+                ? 'bg-amber-500/25 hover:bg-amber-500/35 border-amber-300/50 text-white' 
+                : 'bg-white/10 hover:bg-white/20 border-white/15 text-white'
+            }`}
+          >
+            <div className="text-xl font-black tracking-tight group-hover:scale-105 transition-transform flex items-center justify-center gap-1">
+              {expiredCount > 0 && <AlertTriangle size={14} className="text-amber-200 animate-bounce" />}
+              {expiredCount}
+            </div>
+            <div className="text-[11px] text-emerald-100 font-medium mt-0.5">過期提醒</div>
           </div>
         </div>
       </div>

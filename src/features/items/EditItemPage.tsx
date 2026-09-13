@@ -14,18 +14,11 @@ const EditItemPage: React.FC = () => {
   
   const item = items.find(i => i.id === id);
 
-  const [formData, setFormData] = useState(item || {
-    name: '',
-    image: undefined as string | undefined,
-    spaceId: spaces[0]?.id || '',
-    locationId: '',
-    quantity: 1,
-    unit: '個',
-  });
-
   if (!item) {
     return <div className="p-4">物品不存在</div>;
   }
+
+  const [formData, setFormData] = useState<typeof item>(item);
 
   const filteredLocations = locations.filter(l => l.spaceId === formData.spaceId);
 
