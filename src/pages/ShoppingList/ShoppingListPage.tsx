@@ -74,32 +74,34 @@ export const ShoppingListPage: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleAdd} className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-2">
+      <form onSubmit={handleAdd} className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap sm:flex-nowrap items-center gap-2">
         <input
           type="text"
           value={newItemName}
           onChange={(e) => setNewItemName(e.target.value)}
           placeholder="新增想買的物品名稱..."
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm text-gray-800 outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+          className="w-full sm:flex-1 bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm text-gray-800 outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
         />
-        <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-2 py-1.5">
-          <span className="text-xs text-gray-400 mr-1">數:</span>
-          <input 
-            type="number" 
-            min="1" 
-            max="99" 
-            value={newItemQty}
-            onChange={(e) => setNewItemQty(Math.max(1, parseInt(e.target.value) || 1))}
-            className="w-10 text-center text-sm font-bold bg-transparent outline-none"
-          />
+        <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2">
+          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-2 flex-1 sm:flex-initial">
+            <span className="text-xs text-gray-400 mr-1.5 shrink-0">數量:</span>
+            <input 
+              type="number" 
+              min="1" 
+              max="99" 
+              value={newItemQty}
+              onChange={(e) => setNewItemQty(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-12 text-center text-sm font-bold bg-transparent outline-none text-gray-800"
+            />
+          </div>
+          <button 
+            type="submit" 
+            disabled={!newItemName.trim()}
+            className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white p-3 rounded-xl transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center shrink-0 min-w-[46px] min-h-[46px]"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
         </div>
-        <button 
-          type="submit" 
-          disabled={!newItemName.trim()}
-          className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white p-3 rounded-xl transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center"
-        >
-          <Plus className="w-5 h-5" />
-        </button>
       </form>
 
       {lowStockItems.length > 0 && (
